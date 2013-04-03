@@ -5,7 +5,12 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.mapred.JobConf;
 import org.apache.hadoop.mapred.SequenceFileOutputFormat;
+import org.apache.hadoop.mapred.MapFileOutputFormat;
+import org.apache.hadoop.mapred.TextOutputFormat;
+//import org.apache.hadoop.mapred.MapFileInputFormat;
 import org.apache.hadoop.mapred.SequenceFileInputFormat;
+import org.apache.hadoop.mapred.SequenceFileOutputFormat;
+import org.apache.hadoop.mapred.FileOutputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
 import org.apache.hadoop.io.ArrayFile;
 import edu.ucsb.cs.knn.KnnDriver;
@@ -29,7 +34,8 @@ public class InvertedMain {// extends Configured implements Tool {
 		job.setJobName(InvertedMain.class.getSimpleName());
 		job.setJarByClass(InvertedMain.class);
 		new GenericOptionsParser(job, args);
-
+		job.set("mapred.max.split.size","16777216");
+		job.set("mapred.map.tasks","20");
 		job.setMapRunnerClass(InvertedMapRunner.class);
 		job.setMapperClass(InvertedMapper.class);
 		job.setMapOutputKeyClass(LongWritable.class);
@@ -44,10 +50,14 @@ public class InvertedMain {// extends Configured implements Tool {
 		Path outputPath = new Path(job.get(KnnDriver.OUTPUT_DIR_PROPERTY));
 		// FileOutputFormat.setOutputPath(job, outputPath);
 		FileSystem.get(job).delete(outputPath, true);
-
+		
 		job.setOutputFormat(SequenceFileOutputFormat.class);
-		SequenceFileOutputFormat.setOutputPath(job, outputPath);
-
+		SequenceFileOutputFormat.setOutputPath(job, outputPath); 
+	
+		//job.setOutputFormat(TextOutputFormat.class);
+		//TextOutputFormat.setOutputPath(job, outputPath);  
+		
+		
 		KnnDriver.run(job);
 	}
 }

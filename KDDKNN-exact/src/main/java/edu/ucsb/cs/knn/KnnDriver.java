@@ -14,8 +14,9 @@
  * specific language governing permissions and limitations under
  * the License.
  * 
- * Author: maha alabduljalil <maha (at) cs.ucsb.edu>
- * @Since Aug 18, 2012
+ * Author: Sivabalan Narayanan <sivabalan (at) cs.ucsb.edu>
+ *         Vivek Goswami <vivekgoswami (at) cs.ucsb.edu>
+ * @Since Feb 20, 2013
  */
 
 package edu.ucsb.cs.knn;
@@ -50,19 +51,23 @@ import edu.ucsb.cs.knn.inverted.InvertedMain;
 import edu.ucsb.cs.knn.preprocess.SongInvertedIndexMain;
 import edu.ucsb.cs.knn.preprocess.UserForwardIndexMain;
 import edu.ucsb.cs.knn.query.QueryMain;
+import edu.ucsb.cs.knn.query.RMSEMain;
+import edu.ucsb.cs.knn.query.QueryAllMain;
 import edu.ucsb.cs.knn.types.SequenceReader;
 
 /**
  * The starting point of execution. This class present the job options available
- * to run then execute user's choice.
+ * to run then execute user's choice .
  * 
- * @author Maha
+ * @author Sivabalan Narayanan and Vivek Goswami
  * 
  */
 public class KnnDriver {
 
 	public static final String INPUT_DIR_PROPERTY = "knn.input.dir";
 	public static final String OUTPUT_DIR_PROPERTY = "knn.output.dir";
+	public static final String QUERY_DIR_PROPERTY = "knn.query.dir";
+	public static final String RESULT_DIR_PROPERTY = "knn.result.dir";
 	public static final String THRESHOLD_PROPERTY = "knn.sim.threshold";
 	public static final float THRESHOLD_VALUE = 0.85f;
 
@@ -84,7 +89,9 @@ public class KnnDriver {
 					" not yet done ...knn over songs forward index.");
 			// pgd.addClass("estimateknn", InvertedMain.class, " TO-DO.");
 			pgd.addClass("readseq", SequenceReader.class, " View sequence file as text to read.");
-			pgd.addClass("queryknn", QueryMain.class, " Query the KNN results for recommendation.");
+			//pgd.addClass("queryknn", QueryMain.class, " Query the KNN results for recommendation.");
+			pgd.addClass("queryknn", QueryAllMain.class, " Query the KNN results for recommendation.");
+			pgd.addClass("rmse", RMSEMain.class, " Calculate the RMSE value");
 			pgd.driver(argv);
 			exitCode = 0;
 		} catch (Throwable e) {
